@@ -3,7 +3,7 @@
 
 import boto3
 
-search_tags = ['vpc*','*server']
+search_tags = ['webserver*','applicationserver*']
 ec2  = boto3.client("ec2")
 
 def fetch_instance(filter_val):
