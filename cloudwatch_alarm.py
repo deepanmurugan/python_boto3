@@ -8,7 +8,10 @@
 
 import boto3
 regions = ['us-east-1','us-east-2']
-aws_account_id = '8XXXXXXXXXXX'
+aws_account_id = '87XXXXXXXXXX'
+metric_name = 'ErrorPortAllocation'
+name_space = 'AWS/NATGateway'
+dimension_name = 'NatGatewayId'
 
 # Create alarm using defined metrics
 def create_alarm(natgatewayid, name, region):
@@ -17,8 +20,8 @@ def create_alarm(natgatewayid, name, region):
         AlarmName='NAT_Port_Allocation_Alarm_'+name,
         ComparisonOperator='GreaterThanThreshold',
         EvaluationPeriods=2,
-        MetricName='ErrorPortAllocation',
-        Namespace='AWS/NATGateway',
+        MetricName=metric_name,
+        Namespace=name_space,
         Period=60,
         Statistic='Average',
         Threshold=0,
@@ -27,7 +30,7 @@ def create_alarm(natgatewayid, name, region):
         AlarmDescription='Alarm when NAT Gateway port mapping crosses threshold',
         Dimensions=[
             {
-            'Name': 'NatGatewayId',
+            'Name': dimension_name, 
             'Value': natgatewayid
             },
         ],
@@ -36,13 +39,12 @@ def create_alarm(natgatewayid, name, region):
 
 # Create AWS service clients and fetch Nategaway ID
 for region in regions:
-    print('created client for region', region)
+    print('Created client and working on Region', region)
     cloudwatch = boto3.client('cloudwatch', region_name = region)
     client = boto3.client('ec2', region_name = region)
     natgateways = client.describe_nat_gateways()
     for natgateway in natgateways['NatGateways']:
         print("Creating cloudwatch alarm for NAT ID "+natgateway['NatGatewayId']+" in region: ",region)
-        #print(natgateway['NatGatewayId'])
         for nat_tags in natgateway['Tags']:
             if 'Name' in nat_tags['Key']:
                 name = nat_tags['Value']
