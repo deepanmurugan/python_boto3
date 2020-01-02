@@ -3,7 +3,7 @@
 
 # Inputs: 
 # Regions - provide all regions where you want alarm to be created
-# SNS Topic to be created and subscibed previosuly for all regions mentioned
+# SNS Topic to be created and subscribed previosuly for all regions mentioned
 # aws_account_id - your 12 digit AWS account ID
 
 import boto3
@@ -37,7 +37,7 @@ def create_alarm(natgatewayid, name, region):
         Unit='Seconds'
     )
 
-# Create AWS service clients and fetch Nategaway ID
+# Create AWS service clients and fetch Natgateway ID
 for region in regions:
     print('Created client and working on Region', region)
     cloudwatch = boto3.client('cloudwatch', region_name = region)
