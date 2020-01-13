@@ -25,7 +25,7 @@ def create_alarm(natgatewayid, name, region):
         Period=60,
         Statistic='Average',
         Threshold=0,
-        ActionsEnabled=False,
+        ActionsEnabled=True,
         AlarmActions=[sns_arn],
         AlarmDescription='Alarm when NAT Gateway port mapping crosses threshold',
         Dimensions=[
@@ -33,8 +33,7 @@ def create_alarm(natgatewayid, name, region):
             'Name': dimension_name, 
             'Value': natgatewayid
             },
-        ],
-        Unit='Seconds'
+        ]
     )
 
 # Create AWS service clients and fetch Natgateway ID
