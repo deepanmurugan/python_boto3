@@ -45,7 +45,7 @@ def take_snapshot(reg, ec2):
 
 def delete_snapshot(reg, ec2):
     now = datetime.now()
-    account_id = '690646717512'
+    account_id = 'XXXXXXXXXXX'
     retention_days = 3
     result = ec2.describe_snapshots( OwnerIds=[account_id] )
     
