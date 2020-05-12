@@ -60,12 +60,11 @@ cloudwatch_exporter.metrics.7 = channel" >> /etc/rabbitmq/rabbitmq.conf
 ```
 ```
 If you don't want any of the metrics you can remove it from the config. Ex: If you are not using channel/connection you can remove last 2 lines.
+cloudwatch_exporter.aws.region = "us-east-2" => Add this line also to /etc/rabbitmq/rabbitmq.conf if you want to push cloudwatch metrics to a different region other than the default region.
 ```
 ### Restart the rabbitmq service to take new config
 ```
 sudo service rabbitmq-server restart
 ```
 
-
-
-
+You will see the metrics under RabbitMQ namespace in AWS Cloudwatch under your default AWS Region or cloudwatch_exporter.aws.region.
