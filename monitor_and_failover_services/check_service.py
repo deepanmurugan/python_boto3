@@ -3,6 +3,8 @@ import subprocess
 import socket
 import ast
 import datetime
+import time
+import sys
 import ConfigParser
 import boto
 from boto.route53.record import ResourceRecordSets
@@ -28,12 +30,12 @@ def check_master():
     resp, err, ret_code = handle_os_cmd('dig +short {}'.format(dns_fqdn))
     if (not ret_code) and resp:
         master_node = resp.split()[0]
-        print "Master Node {} is up, no issues...".format(master_node)
-
     resp, err, ret_code = handle_os_cmd('nc -vz {} {} > /dev/null; if ! [ $? -eq 0 ]; then exit 2; fi;'.format(dns_fqdn, healthcheck_port))
     if ret_code != 0:
         print "Master Node is down... checking for next node to promote as master..."
         get_all_node_health()
+    else:
+        print "Master Node is already up... no issues...".format(master_node)
 
 def get_all_node_health():
     for node in all_node_health_stat:
@@ -65,8 +67,9 @@ def update_dns(this_node):
     change = changes.add_change("UPSERT", dns_fqdn, "A", ttl=10)
     change.add_value(this_node)
     result = changes.commit()
-    msg = "[{:%Y-%b-%d %H:%M:%S}] Updating FQDN={} to IP={}. response={}".format(datetime.datetime.now(), dns_fqdn, local_ip, result)
+    msg = "[{:%Y-%b-%d %H:%M:%S}] Updating FQDN={} to IP={}. response={}".format(datetime.datetime.now(), dns_fqdn, this_node, result)
     print msg
+    sys.exit(0)
 
 
 if __name__ == "__main__":
